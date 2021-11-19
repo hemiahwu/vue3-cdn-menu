@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>菜单</title>
+    <link rel="shortcut icon" href="./orange.ico" />
+    <link rel="stylesheet" href="./css/style.css">
+    <script type="text/javascript" src="./js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 标题 -->
+        <div class="title">
+            <h2>菜单</h2>
+            <div class="underline"></div>
+        </div>
+        <!-- 过滤按钮 -->
+        <div class="btn-container">
+            <button :class="{'filter-btn':true,selected:btnType==btn}" v-for='(btn,index) in categories' :key='index'
+                @click='btnType = btn'>{{btn}}</button>
+        </div>
+        <!-- 菜谱选项 -->
+        <div class="section-center">
+            <article class="menu-item" v-for='item in showData' :key='item.id'>
+                <img class="photo" :src="item.img" :alt="item.title">
+                <div class="item-info">
+                    <header>
+                        <h4>{{item.title}}</h4>
+                        <h4 class="price">{{item.price}}</h4>
+                    </header>
+                    <p class="item-text">{{item.desc}}</p>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <script type="module">
+        //引入模块
+        import {menu} from './js/sourceData.js';
+        const categories = ['全部',...new Set(menu.map(item => item.category))];
+        //全局配置
+        Vue.config.productionTip = false;
+        //创建Vue实例
+        new Vue({
+            el: '#app',
+            data: {
+                menu, //菜单数据
+                categories, //分类
+                btnType:'全部', //按钮类型
+            },
+            computed:{
+                showData(){
+                    if(this.btnType == '全部'){
+                        return this.menu;
+                    }
+                    return this.menu.filter(item => item.category == this.btnType);
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
